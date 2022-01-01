@@ -1,0 +1,363 @@
+<html>
+<head>
+    <title>Index</title>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="row">
+        <div class="card col-6">
+            <h5 class="card-header">
+                路線資訊
+            </h5>
+            <div class="card-body">
+                樓下公車路線
+                <img src="http://www.stbus.com.tw/images/301-110.08.18.jpg" class="img-fluid" />
+                輕軌捷運
+                <img src="https://takaogooday.org/wp-content/uploads/2018/08/20180823.jpg" class="img-fluid" />
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="card row">
+                <h5 class="card-header">
+                    天氣資訊
+                </h5>
+                <div class="card-body">
+                    <p id="weather" class="card-text">資料讀取中...</p>
+                </div>
+            </div>
+
+            <div class="card row">
+                <h5 class="card-header">
+                    Youbike資訊
+                </h5>
+                <div class="card-body">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">站名</th>
+                                <th scope="col">可借</th>
+                                <th scope="col">可停</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>華榮路口</td>
+                                <td>
+                                    <span class="badge rounded-pill" id="p1-sbi"></span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill" id="p1-sbi2"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>翠峰路</td>
+                                <td>
+                                    <span class="badge rounded-pill" id="p2-sbi"></span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill" id="p2-sbi2"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>美術館</td>
+                                <td>
+                                    <span class="badge rounded-pill" id="p3-sbi"></span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill" id="p3-sbi2"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>美術館麥當勞</td>
+                                <td>
+                                    <span class="badge rounded-pill" id="p4-sbi"></span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill" id="p4-sbi2"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- DivTable.com -->
+                </div>
+            </div>
+
+            <div class="card row">
+                <h5 class="card-header">
+                    公車資訊
+                </h5>
+                <div class="card-body">
+
+                    <p id="bus" class="card-text">資料讀取中...</p>
+
+                </div>
+            </div>
+            <div class="card row">
+                <h5 class="card-header">
+                    台鐵資訊
+                </h5>
+                <div class="card-body">
+
+                    <p id="tra" class="card-text">資料讀取中...</p>
+
+                </div>
+            </div>
+            <div class="card row">
+                <h5 class="card-header">
+                    輕軌資訊
+                </h5>
+                <div class="card-body">
+
+                    <p id="lrt" class="card-text">資料讀取中...</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script>
+
+        function badge(ele, num) {
+            if (num > 0) {
+                ele.classList.add("bg-success");
+            } else {
+                ele.classList.add("bg-secondary");
+            }
+            ele.innerText = num;
+        }
+
+        function getJson(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    callback(JSON.parse(xhr.responseText));
+                }
+            };
+            xhr.open("GET", url, true);
+            xhr.send();
+        }
+
+        //YouBike資訊
+        getJson("https://api.kcg.gov.tw/api/service/Get/b4dd9c40-9027-4125-8666-06bef1756092", (obj) => {
+            var pot = obj.data.retVal;
+            var content = "";
+            for (var i = 0; i < pot.length; i++) {
+                var p = pot[i];
+                if (p.sna == "YouBike2.0_華榮翠華路口") {
+                    var sbi = document.getElementById("p1-sbi");
+                    badge(sbi, p.sbi);
+
+                    //var sbi2 = document.getElementById("p1-sbi2");
+                    //badge(sbi2, (p.tot - p.sbi));
+
+                }
+
+                if (p.sna == "YouBike2.0_翠峰果峰街12巷口東側") {
+                    var sbi = document.getElementById("p2-sbi");
+                    badge(sbi, p.sbi);
+
+                    //var sbi2 = document.getElementById("p2-sbi2");
+                    //badge(sbi2, (p.tot - p.sbi));
+                }
+
+                if (p.sna == "YouBike2.0_明誠馬卡道路口(東南側)") {
+                    //var sbi = document.getElementById("p3-sbi");
+                    //badge(sbi, p.sbi);
+
+                    var sbi2 = document.getElementById("p3-sbi2");
+                    badge(sbi2, (p.tot - p.sbi));
+
+                }
+
+                if (p.sna == "YouBike2.0_美術東二明誠路口(西南側)") {
+                    //var sbi = document.getElementById("p4-sbi");
+                    //badge(sbi, p.sbi);
+
+                    var sbi2 = document.getElementById("p4-sbi2");
+                    badge(sbi2, (p.tot - p.sbi));
+                }
+            }
+            content += "<br/>更新時間: " + obj.data.updated_at;
+        });
+
+        //天氣
+        getJson("https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=rdec-key-123-45678-011121314&locationName=%E9%AB%98%E9%9B%84%E5%B8%82", (obj) => {
+            getJson("https://data.epa.gov.tw/api/v1/aqx_p_432?limit=1000&api_key=9be7b239-557b-4c10-9775-78cadfc555e9&sort=ImportDate%20desc&format=json", (obj2) => {
+                var AQISite = obj2.records.find((key) => key.SiteName == "左營");
+                var AQI = AQISite.AQI;
+                var AQIStatus = AQISite.Status;
+                var wax = obj.records.location[0].weatherElement[0].time[0].parameter.parameterName;
+                var rain = obj.records.location[0].weatherElement[1].time[0].parameter.parameterName;
+                var minT = obj.records.location[0].weatherElement[2].time[0].parameter.parameterName;
+                var comfortable = obj.records.location[0].weatherElement[3].time[0].parameter.parameterName;
+                var maxT = obj.records.location[0].weatherElement[4].time[0].parameter.parameterName;
+
+                var badge = "";
+                if (AQI < 50) {
+                    badge = "badge bg-success";
+                }
+                else if (AQI < 100) {
+                    badge = "badge bg-warning text-dark";
+                }
+                else if (AQI < 150) {
+                    badge = "badge bg-danger";
+                }
+
+                var w = ("空氣品質: " + AQI + " <div class='" + badge + "'>" + AQIStatus + "</div><br/>" + wax + "<br/> 降雨率: " + rain + "%<br/> 溫度: " + minT + " ~ " + maxT + "<br/>舒適度: " + comfortable);
+                var p = document.getElementById("weather");
+                p.innerHTML = w;
+            });
+        });
+
+        //公車
+        getJson("https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/Kaohsiung/301?$format=JSON", (obj) => {
+            //抓現在時間
+            var stops = obj.filter(obj => /*obj.StopName.Zh_tw.indexOf("翠華") > -1 ||*/ obj.StopName.Zh_tw.indexOf("翠峰路") > -1);
+            //stops.sort(x => x.SubRouteID);
+            var content = "";
+            stops.forEach(s => {
+                if (s.EstimateTime) {
+                    var t = new Date();
+                    t.setSeconds(t.getSeconds() + s.EstimateTime);
+                    var tf = t.getHours() + ":" + t.getMinutes();
+                    content += s.StopName.Zh_tw + " : " + /*(s.EstimateTime / 60) + "分鐘"*/  " (" + tf + ") 方向:" + (s.Direction == 1 ? "往巨蛋(南下)" : "往楠梓(北上)") + "<br/>";
+                }
+                else {
+                    content += s.StopName.Zh_tw + " : " + Math.round((new Date(s.NextBusTime) - Date.now()) / 60000) + "分鐘 方向:" + (s.Direction == 1 ? "往巨蛋(南下)" : "往楠梓(北上)") + "<br/>"
+                }
+            });
+
+            document.getElementById("bus").innerHTML = content;
+        });
+
+
+        //台鐵
+        getJson("https://ptx.transportdata.tw/MOTC/v3/Rail/TRA/DailyStationTimetable/Today/Station/4350?%24top=30&%24format=JSON", (obj) => {
+
+            //抓現在時間
+            var hour = new Date().getHours();
+            var minute = new Date().getMinutes();
+            var hour2 = hour + 1;
+
+            var content = "<strong>舊城站</strong><br/>北上<br/>";
+            //撈接近現在時間的資料
+            for (var i = 0; i < obj.StationTimetables[0].TimeTables.length; i++) {
+                var h = obj.StationTimetables[0].TimeTables[i].ArrivalTime.split(":")[0];
+                var m = obj.StationTimetables[0].TimeTables[i].ArrivalTime.split(":")[1];
+                h = parseInt(h);
+                m = parseInt(m);
+                if (h >= hour && m >= minute && h <= hour + 1) {
+                    content += obj.StationTimetables[0].TimeTables[i].DestinationStationName.Zh_tw + " : " + obj.StationTimetables[0].TimeTables[i].ArrivalTime + " ";
+                }
+            }
+            content += "<br/><br/>南下<br/>";
+            for (var i = 0; i < obj.StationTimetables[1].TimeTables.length; i++) {
+                var h = obj.StationTimetables[1].TimeTables[i].ArrivalTime.split(":")[0];
+                var m = obj.StationTimetables[1].TimeTables[i].ArrivalTime.split(":")[1];
+                h = parseInt(h);
+                m = parseInt(m);
+                if (h >= hour && m >= minute && h <= hour + 1) {
+                    content += obj.StationTimetables[1].TimeTables[i].DestinationStationName.Zh_tw + " : " + obj.StationTimetables[1].TimeTables[i].ArrivalTime + " ";
+                }
+            }
+
+            //打印
+            document.getElementById("tra").innerHTML = (content+"<br/>");
+        });
+
+                getJson("https://ptx.transportdata.tw/MOTC/v3/Rail/TRA/DailyStationTimetable/Today/Station/4340?%24top=30&%24format=JSON", (obj) => {
+
+            //抓現在時間
+            var hour = new Date().getHours();
+            var minute = new Date().getMinutes();
+            var hour2 = hour + 1;
+
+            var content = "<strong>高鐵站</strong><br/>北上<br/>";
+            //撈接近現在時間的資料
+            for (var i = 0; i < obj.StationTimetables[0].TimeTables.length; i++) {
+                var h = obj.StationTimetables[0].TimeTables[i].ArrivalTime.split(":")[0];
+                var m = obj.StationTimetables[0].TimeTables[i].ArrivalTime.split(":")[1];
+                h = parseInt(h);
+                m = parseInt(m);
+                if (h >= hour && m >= minute && h <= hour + 1) {
+                    content += obj.StationTimetables[0].TimeTables[i].DestinationStationName.Zh_tw + " : " + obj.StationTimetables[0].TimeTables[i].ArrivalTime + " ";
+                }
+            }
+            content += "<br/><br/>南下<br/>";
+            for (var i = 0; i < obj.StationTimetables[1].TimeTables.length; i++) {
+                var h = obj.StationTimetables[1].TimeTables[i].ArrivalTime.split(":")[0];
+                var m = obj.StationTimetables[1].TimeTables[i].ArrivalTime.split(":")[1];
+                h = parseInt(h);
+                m = parseInt(m);
+                if (h >= hour && m >= minute && h <= hour + 1) {
+                    content += obj.StationTimetables[1].TimeTables[i].DestinationStationName.Zh_tw + " : " + obj.StationTimetables[1].TimeTables[i].ArrivalTime + " ";
+                }
+            }
+
+            //打印
+            document.getElementById("tra").innerHTML += (content+"<br/>");
+        });
+
+                getJson("https://ptx.transportdata.tw/MOTC/v3/Rail/TRA/DailyStationTimetable/Today/Station/4370?%24top=30&%24format=JSON", (obj) => {
+
+            //抓現在時間
+            var hour = new Date().getHours();
+            var minute = new Date().getMinutes();
+            var hour2 = hour + 1;
+
+            var content = "<strong>美術館站</strong><br> 北上<br/>";
+            //撈接近現在時間的資料
+            for (var i = 0; i < obj.StationTimetables[0].TimeTables.length; i++) {
+                var h = obj.StationTimetables[0].TimeTables[i].ArrivalTime.split(":")[0];
+                var m = obj.StationTimetables[0].TimeTables[i].ArrivalTime.split(":")[1];
+                h = parseInt(h);
+                m = parseInt(m);
+                if (h >= hour && m >= minute && h <= hour + 1) {
+                    content += obj.StationTimetables[0].TimeTables[i].DestinationStationName.Zh_tw + " : " + obj.StationTimetables[0].TimeTables[i].ArrivalTime + " ";
+                }
+            }
+            content += "<br/><br/>南下<br/>";
+            for (var i = 0; i < obj.StationTimetables[1].TimeTables.length; i++) {
+                var h = obj.StationTimetables[1].TimeTables[i].ArrivalTime.split(":")[0];
+                var m = obj.StationTimetables[1].TimeTables[i].ArrivalTime.split(":")[1];
+                h = parseInt(h);
+                m = parseInt(m);
+                if (h >= hour && m >= minute && h <= hour + 1) {
+                    content += obj.StationTimetables[1].TimeTables[i].DestinationStationName.Zh_tw + " : " + obj.StationTimetables[1].TimeTables[i].ArrivalTime + " ";
+                }
+            }
+            //打印
+            document.getElementById("tra").innerHTML += (content+"<br/>");
+        });
+
+        //輕軌
+        getJson("https://ptx.transportdata.tw/MOTC/v2/Rail/Metro/StationTimeTable/KLRT?$top=1000&$format=JSON", (obj) => {
+            var hour = new Date().getHours();
+            var minute = new Date().getMinutes();
+            var content = "";
+            content += "<strong>C20美術館站</strong><br/>"
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i].StationID == "C20") {
+                    for (var k = 0; k < obj[i].Timetables.length; k++) {
+                        var h = obj[i].Timetables[k].ArrivalTime.split(":")[0];
+                        var m = obj[i].Timetables[k].ArrivalTime.split(":")[1];
+                        h = parseInt(h);
+                        m = parseInt(m);
+                        if (h >= hour && m >= minute && h <= hour + 1) {
+                            content += obj[i].Timetables[k].ArrivalTime + "<br/>";
+                        }
+                    }
+                    break;
+                }
+            }
+            document.getElementById("lrt").innerHTML = content;
+        });
+    </script>
+</body>
+</html>
